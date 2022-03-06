@@ -9,7 +9,8 @@ router.get('/customers', (req, res) => {
   Customer.findAll()
     .then(customers => {
       res.status(200)
-        .setHeader('content-type', 'application/json')
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+        res.setHeader('content-type', 'application/json')
         .send(customers); // body is JSON
     })
     .catch(error => {
