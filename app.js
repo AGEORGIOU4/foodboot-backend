@@ -7,8 +7,7 @@ const db = require('./db/configDB')
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-var bodyParser = require('body-parser')
-
+const bodyParser = require('body-parser');
 app.use(bodyParser.json())
 
 // Test DB
@@ -21,5 +20,5 @@ app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https:
 app.use('/', customers);
 
 app.listen(PORT, () => {
-  console.log(`REST API app listening at http://localhost:${PORT}`)
+  console.log(`App listening at http://localhost:${PORT}`)
 });

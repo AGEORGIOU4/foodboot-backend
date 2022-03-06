@@ -1,7 +1,7 @@
 {
-  "name": "sequelize",
+  "name": "foodboot-backend",
   "version": "1.0.0",
-  "description": "Sequelize App Deployed on Heroku",
+  "description": "foodboot Backend using REST APIs App Deployed on Heroku",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AGEORGIOU4/sequelize.git"
+    "url": "git+https://github.com/AGEORGIOU4/foodboot-backend.git"
   },
   "author": "Andreas Georgiou",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AGEORGIOU4/sequelize/issues"
+    "url": "https://github.com/AGEORGIOU4/foodboot-backend/issues"
   },
-  "homepage": "https://github.com/AGEORGIOU4/sequelize#readme",
+  "homepage": "https://github.com/AGEORGIOU4/foodboot-backend#readme",
   "dependencies": {
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
@@ -27,5 +27,11 @@
     "sequelize-cli": "^6.4.1",
     "sqlite3": "^5.0.2",
     "sqlite3-transactions": "^0.0.5"
-  }
+  },
+  "keywords": [
+    "thesis",
+    "nutritionist",
+    "software",
+    "engineering"
+  ]
 }
