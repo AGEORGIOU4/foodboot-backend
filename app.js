@@ -5,7 +5,7 @@ const customers = require('./calls/customers.js');
 const db = require('./db/configDB')
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
