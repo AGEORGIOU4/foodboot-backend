@@ -1,0 +1,31 @@
+{
+  "name": "sequelize",
+  "version": "1.0.0",
+  "description": "Sequelize App Deployed on Heroku",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AGEORGIOU4/sequelize.git"
+  },
+  "author": "Andreas Georgiou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AGEORGIOU4/sequelize/issues"
+  },
+  "homepage": "https://github.com/AGEORGIOU4/sequelize#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "sequelize": "^6.17.0",
+    "sequelize-cli": "^6.4.1",
+    "sqlite3": "^5.0.2",
+    "sqlite3-transactions": "^0.0.5"
+  }
+}
