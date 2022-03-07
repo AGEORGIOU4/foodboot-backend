@@ -33,7 +33,7 @@ router.post('/customers/create', (req, res) => {
     return sequelize.transaction(async (t) => {
         // invalid customer posted
         if (!posted_customer.name || !posted_customer.surname || !posted_customer.email || !posted_customer.phone || !posted_customer.dob) {
-            return res.status(422)
+             res.status(422)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Bad request - All fields must be completed`}); // bad request
         }
@@ -52,9 +52,9 @@ router.post('/customers/create', (req, res) => {
             })
             .catch(error => {
                 if (error.name === 'SequelizeUniqueConstraintError') {
-                    return res.status(409)
+                     res.status(409)
                         .setHeader('content-type', 'application/json')
-                        .send({error: `Customer already exists for Email: ${posted_customer.email} or Phone: ${posted_customer.phone}`}); // resource already exists
+                        .send({error: `Customer with this email already exists!`}); // resource already exists
                 }
             });
     })

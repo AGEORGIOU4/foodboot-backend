@@ -23,12 +23,11 @@ const Customer = db.define('Customer', {
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: true,
   },
   dob: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
 }, {
   tableName: 'customers', // table name
