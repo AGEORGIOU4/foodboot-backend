@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db/configDB')
 
-const Customer = db.define('Customer', {
+const Client = db.define('Client', {
   id: {
     type: DataTypes.INTEGER,
     require: true,
@@ -30,7 +30,7 @@ const Customer = db.define('Customer', {
     allowNull: true,
   },
 }, {
-  tableName: 'customers', // table name
+  tableName: 'clients', // table name
   timestamps: false // skip custom timestamp columns
 });
 
@@ -40,4 +40,4 @@ async function init() {
 
 init();
 
-module.exports = Customer;
+module.exports = Client;

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const sequelize = require('../db/configDB');
 
-const Customer = require('../concepts/Customer');
+const Client = require('../concepts/Client');
 
 // Add headers to allow API calls before the routes are defined
 router.use(function (req, res, next) {
@@ -13,12 +13,12 @@ router.use(function (req, res, next) {
     next();
 });
 
-router.get('/customers', (req, res) => {
-    Customer.findAll()
-        .then(customers => {
+router.get('/clients', (req, res) => {
+    Client.findAll()
+        .then(clients => {
             res.status(200)
             res.setHeader('content-type', 'application/json')
-                .send(customers); // body is JSON
+                .send(clients); // body is JSON
         })
         .catch(error => {
             res.status(500)
@@ -27,34 +27,34 @@ router.get('/customers', (req, res) => {
         });
 });
 
-router.post('/customers/create', (req, res) => {
-    const posted_customer = req.body; // submitted customer
+router.post('/clients/create', (req, res) => {
+    const posted_client = req.body; // submitted client
 
     return sequelize.transaction(async (t) => {
-        // invalid customer posted
-        if (!posted_customer.name || !posted_customer.surname || !posted_customer.email || !posted_customer.phone || !posted_customer.dob) {
+        // invalid client posted
+        if (!posted_client.name || !posted_client.surname || !posted_client.email || !posted_client.phone || !posted_client.dob) {
              res.status(422)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Bad request - All fields must be completed`}); // bad request
         }
 
-        return Customer.create({
-            name: posted_customer.name,
-            surname: posted_customer.surname,
-            email: posted_customer.email,
-            phone: posted_customer.phone,
-            dob: posted_customer.dob,
+        return Client.create({
+            name: posted_client.name,
+            surname: posted_client.surname,
+            email: posted_client.email,
+            phone: posted_client.phone,
+            dob: posted_client.dob,
         }, {transaction: t})
-            .then(customer => {
+            .then(client => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Customer added`, customer: customer}); // body is JSON
+                    .send({message: `Client added`, client: client}); // body is JSON
             })
             .catch(error => {
                 if (error.name === 'SequelizeUniqueConstraintError') {
                      res.status(409)
                         .setHeader('content-type', 'application/json')
-                        .send({error: `Customer with this email already exists!`}); // resource already exists
+                        .send({error: `Client with this email already exists!`}); // resource already exists
                 }
             });
     })

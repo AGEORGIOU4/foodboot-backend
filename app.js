@@ -1,6 +1,6 @@
 const express = require('express')
 
-const customers = require('./calls/customers.js');
+const clients = require('./calls/clients.js');
 
 const db = require('./db/configDB')
 
@@ -17,7 +17,7 @@ db.authenticate()
 
 app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https://foodboot.netlify.app/") })
 // Calls
-app.use('/', customers);
+app.use('/', clients);
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)
