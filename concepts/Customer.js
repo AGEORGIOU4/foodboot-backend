@@ -21,6 +21,15 @@ const Customer = db.define('Customer', {
     allowNull: false,
     unique: true
   },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  dob: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
 }, {
   tableName: 'customers', // table name
   timestamps: false // skip custom timestamp columns
