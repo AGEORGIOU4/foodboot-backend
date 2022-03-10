@@ -1,7 +1,6 @@
 const {DataTypes} = require('sequelize');
 const db = require('../db/configDB');
 
-//test
 const Medical_History = db.define('Medical_History', {
     id: {
         primaryKey: true,
