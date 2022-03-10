@@ -6,6 +6,9 @@ const db = require('../db/configDB');
 const Client = require('../concepts/Client');
 const Medical_History = require('../concepts/Medical_History');
 
+
+//test
+
 // Add headers to allow API calls before the routes are defined
 router.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
