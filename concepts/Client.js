@@ -5,6 +5,7 @@ const db = sequelize();
 const Client = db.define('Client', {
   id: {
     type: DataTypes.INTEGER,
+    require: true,
     primaryKey: true,
     autoIncrement: true
   },

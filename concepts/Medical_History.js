@@ -1,13 +1,17 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../db/configDB');
+const {DataTypes} = require('sequelize');
+const {sequelize} = require('../db/configDB');
 const db = sequelize();
 
 const Medical_History = db.define('Medical_History', {
-    client_id: {
+    id: {
         primaryKey: true,
         type: DataTypes.INTEGER,
         require: true,
-        unique: true,
+        autoIncrement: true,
+    },
+    client_id: {
+        type: DataTypes.INTEGER,
+        require: true,
         allowNull: false
     },
     date: {

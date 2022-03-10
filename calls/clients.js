@@ -20,12 +20,12 @@ router.use(function (req, res, next) {
 router.get('/clients', (req, res) => {
     Client.findAll()
         .then(clients => {
-            res.status(200)
+            return res.status(200)
                 .setHeader('content-type', 'application/json')
                 .send(clients); // body is JSON
         })
         .catch(error => {
-            res.status(500)
+            return res.status(500)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Server error: ${error.name}`});
         });
@@ -79,7 +79,7 @@ router.put('/clients/update/:id', (req, res) => {
         if (isNaN(id)) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
-                .send({message: `ID is non-numeric`});
+                .send({error: `ID is non-numeric`});
         }
 
         const client = await Client.findOne({where: {id: id}})
@@ -167,12 +167,12 @@ router.delete('/clients/delete/:id', (req, res) => {
 router.get('/clients/medical-histories', (req, res) => {
     Medical_History.findAll()
         .then(clients => {
-            res.status(200)
+            return res.status(200)
                 .setHeader('content-type', 'application/json')
                 .send(clients); // body is JSON
         })
         .catch(error => {
-            res.status(500)
+            return res.status(500)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Server error: ${error.name}`});
         });
@@ -184,7 +184,7 @@ router.get('/clients/medical-histories/:id', (req, res) => {
     if (isNaN(id)) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
-            .send({message: `ID is non-numeric`});
+            .send({error: `ID is non-numeric`});
     }
 
     Medical_History.findOne({where: {client_id: id}})
@@ -192,7 +192,7 @@ router.get('/clients/medical-histories/:id', (req, res) => {
             if (!medical_history) {
                 return res.status(404)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Medical History not found for Client with id: ${id}`});
+                    .send({error: `Medical History not found for Client with id: ${id}`});
             }
 
             // medical_history found
@@ -211,6 +211,7 @@ router.post('/clients/medical-histories/create', (req, res) => {
     const posted_medical_history = req.body; // submitted client
 
     return db.transaction(async (t) => {
+
         // invalid medical history posted
         if (!posted_medical_history.client_id || !posted_medical_history.date || !posted_medical_history.height || !posted_medical_history.weight) {
             return res.status(422)
@@ -218,12 +219,12 @@ router.post('/clients/medical-histories/create', (req, res) => {
                 .send({error: `Bad request - All fields must be completed`}); // bad request
         }
 
-        return Client.findOne({where: {id: posted_medical_history.client_id}})
+        return Client.findOne({where: {client_id: id}})
             .then(medical_history => {
                 if (!medical_history) {
                     return res.status(404)
                         .setHeader('content-type', 'application/json')
-                        .send({message: `Client does not exist for id: ${posted_medical_history.client_id}`});
+                        .send({error: `Client does not exist for id: ${posted_medical_history.client_id}`});
                 } else {
                     return Medical_History.create({
                         client_id: posted_medical_history.client_id,
@@ -236,13 +237,6 @@ router.post('/clients/medical-histories/create', (req, res) => {
                                 .setHeader('content-type', 'application/json')
                                 .send({message: `Medical History added`, medical_history: medical_history}); // body is JSON
                         })
-                        .catch(error => {
-                            if (error.name === 'SequelizeUniqueConstraintError') {
-                                res.status(409)
-                                    .setHeader('content-type', 'application/json')
-                                    .send({error: `Medical history for this client already exists!`}); // resource already exists
-                            }
-                        });
                 }
             })
     })
@@ -261,10 +255,10 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
         if (isNaN(id)) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
-                .send({message: `ID is non-numeric`});
+                .send({error: `ID is non-numeric`});
         }
 
-        const medical_history = await Medical_History.findOne({where: {client_id: id}})
+        const medical_history = await Medical_History.findOne({where: {id: id}})
 
         if (!medical_history) { // medical_history not found
             return res.status(404)
@@ -301,12 +295,12 @@ router.delete('/clients/medical-histories/delete/:id', (req, res) => {
 
     return db.transaction(async (t) => {
 
-        const medical_history = await Medical_History.findOne({where: {client_id: id}})
+        const medical_history = await Medical_History.findOne({where: {id: id}})
 
         if (!medical_history) {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Medical History not found for client_id ${id}`});
+                .send({error: `Medical History not found for id: ${id}`});
         }
 
         // medical_history found
