@@ -187,7 +187,7 @@ router.get('/clients/medical-histories/:id', (req, res) => {
             .send({error: `ID is non-numeric`});
     }
 
-    Medical_History.findOne({where: {client_id: id}})
+    Medical_History.findAll({where: {client_id: id}})
         .then(medical_history => {
             if (!medical_history) {
                 return res.status(404)
@@ -219,7 +219,7 @@ router.post('/clients/medical-histories/create', (req, res) => {
                 .send({error: `Bad request - All fields must be completed`}); // bad request
         }
 
-        return Client.findOne({where: {client_id: id}})
+        return Client.findOne({where: {id: posted_medical_history.client_id}})
             .then(medical_history => {
                 if (!medical_history) {
                     return res.status(404)
