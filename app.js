@@ -1,11 +1,11 @@
 const express = require('express')
-
-const clients = require('./calls/clients.js');
-
-const db = require('./db/configDB')
-
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const {sequelize} = require('./db/configDB');
+const db = sequelize();
+
+const clients = require('./calls/clients.js');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
@@ -15,7 +15,9 @@ db.authenticate()
   .then(() => console.log('Database connected...'))
   .catch(err => console.log('Error: ' + err))
 
+// Welcome Message
 app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https://foodboot.netlify.app/") })
+
 // Calls
 app.use('/', clients);
 

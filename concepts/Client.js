@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const db = require('../db/configDB')
+const { sequelize } = require('../db/configDB');
+const db = sequelize();
 
 const Client = db.define('Client', {
   id: {
@@ -8,13 +9,17 @@ const Client = db.define('Client', {
     primaryKey: true,
     autoIncrement: true
   },
-  name: {
+  first_name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  surname: {
+  last_name: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  dob: {
+    type: DataTypes.DATE,
+    allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
@@ -25,8 +30,12 @@ const Client = db.define('Client', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  dob: {
-    type: DataTypes.DATE,
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  food_allergies: {
+    type: DataTypes.STRING,
     allowNull: true,
   },
 }, {
