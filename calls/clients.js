@@ -238,7 +238,13 @@ router.post('/clients/medical-histories/create', (req, res) => {
                                 .send({message: `Medical History added`, medical_history: medical_history}); // body is JSON
                         })
                 }
-            })
+            }).catch(error => {
+                if (error.name === 'SequelizeUniqueConstraintError') {
+                    res.status(409)
+                        .setHeader('content-type', 'application/json')
+                        .send({error: `Medical event already recorded at that date!`}); // resource already exists
+                }
+            });
     })
         .catch(error => {
             res.status(500)
