@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {sequelize} = require('../db/configDB');
-const db = sequelize();
+const db = require('../db/configDB');
 
 const Client = require('../concepts/Client');
 const Medical_History = require('../concepts/Medical_History');
@@ -160,7 +159,6 @@ router.delete('/clients/delete/:id', (req, res) => {
                 .send({error: `Server error: ${error.name}`});
         });
 });
-
 
 /*-----------MEDICAL HISTORY------------*/
 

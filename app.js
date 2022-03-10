@@ -2,8 +2,7 @@ const express = require('express')
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const {sequelize} = require('./db/configDB');
-const db = sequelize();
+const db = require('./db/configDB');
 
 const clients = require('./calls/clients.js');
 
