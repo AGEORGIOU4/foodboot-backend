@@ -238,63 +238,62 @@ router.get('/clients/medical-histories/:id', (req, res) => {
 router.put('/clients/medical-histories/update/:id', (req, res) => {
     const {id} = req.params; // get id from URI
     const posted_medical_history = req.body; // submitted medical_history
-
-    return db.transaction(async (t) => {
-        if (!posted_medical_history.client_id || !posted_medical_history.date || !posted_medical_history.height || !posted_medical_history.weight) {
+    try {
+        // return db.transaction(async (t) => {
+        if (!posted_medical_history.client_id || !posted_medical_history.date || !posted_medical_history.height
+            || !posted_medical_history.weight) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Bad request - All fields must be completed`}); // bad request
         }
 
-        const client = await Client.findOne({where: {id: posted_medical_history.client_id}});
+        Client.findOne({where: {id: posted_medical_history.client_id}})
+            .then(client => {
+            if (!client) {
+                return res.status(404)
+                    .setHeader('content-type', 'application/json')
+                    .send({error: `Client not found!`});
+            } else {
+                Medical_History.findOne({where: {id: id}})
+                    .then(medical_history => {
+                    if (!medical_history) { // medical_history not found (Create new)
+                        return Medical_History.create({
+                            id: id,
+                            client_id: posted_medical_history.client_id,
+                            date: posted_medical_history.date,
+                            height: posted_medical_history.height,
+                            weight: posted_medical_history.weight,
+                        }).then(medical_history => {
+                            return res.status(200)
+                                .setHeader('content-type', 'application/json')
+                                .send({message: `Medical history record added!`, medical_history: medical_history}); // body is JSON
+                        })
+                    } else {
+                        //  medical history found
+                        medical_history.client_id = posted_medical_history.client_id;
+                        medical_history.date = posted_medical_history.date;
+                        medical_history.height = posted_medical_history.height;
+                        medical_history.weight = posted_medical_history.weight;
 
-        if (!client) {
-            return res.status(404)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Client not found!`});
-        }
-
-        const medical_history = await Medical_History.findOne({where: {id: id}});
-
-        if (!medical_history) { // medical_history not found (Create new)
-            return Medical_History.create({
-                client_id: posted_medical_history.client_id,
-                date: posted_medical_history.date,
-                height: posted_medical_history.height,
-                weight: posted_medical_history.weight,
-            }, {transaction: t})
-                .then(medical_history => {
-                    return res.status(200)
-                        .setHeader('content-type', 'application/json')
-                        .send({message: `Medical history record added!`, medical_history: medical_history}); // body is JSON
-                })
-        }
-        if (medical_history) {
-            //  medical history found
-            medical_history.client_id = posted_medical_history.client_id;
-            medical_history.date = posted_medical_history.date;
-            medical_history.height = posted_medical_history.height;
-            medical_history.weight = posted_medical_history.weight;
-
-            return medical_history.save({transaction: t})
-                .then(medical_history => {
-                    return res.status(200)
-                        .setHeader('content-type', 'application/json')
-                        .send({message: `Medical history record updated!`, medical_history: medical_history}); // body is JSON
-                }).catch(error => {
-                    if (error.name === 'SequelizeUniqueConstraintError') {
-                        res.status(409)
-                            .setHeader('content-type', 'application/json')
-                            .send({error: `Medical history record already exists!`}); // resource already exists
+                        medical_history.save()
+                            .then(medical_history => {
+                            return res.status(200)
+                                .setHeader('content-type', 'application/json')
+                                .send({message: `Medical history record updated!`, medical_history: medical_history}); // body is JSON
+                        }).catch(error => {
+                            res.status(500)
+                                .setHeader('content-type', 'application/json')
+                                .send({error: `Server error: ${error.name}`});
+                        });
                     }
-                })
-        }
-    }).catch(error => {
-        return res.status(500)
+                });
+            }
+        });
+    } catch (error) {
+        res.status(500)
             .setHeader('content-type', 'application/json')
             .send({error: `Server error: ${error.name}`});
-    });
-
+    }
 });
 
 router.delete('/clients/medical-histories/delete/:id', (req, res) => {
