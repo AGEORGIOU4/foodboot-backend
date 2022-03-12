@@ -16,7 +16,6 @@ const Medical_History = db.define('Medical_History', {
     date: {
         type: DataTypes.DATE,
         allowNull: true,
-        unique: true
     },
     height: {
         type: DataTypes.STRING,
