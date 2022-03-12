@@ -266,7 +266,7 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
                 .then(medical_history => {
                     return res.status(200)
                         .setHeader('content-type', 'application/json')
-                        .send({message: `Medical history record added`, medical_history: medical_history}); // body is JSON
+                        .send({message: `Medical history record added!`, medical_history: medical_history}); // body is JSON
                 })
         }
         if (medical_history) {
@@ -280,7 +280,7 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
                 .then(medical_history => {
                     return res.status(200)
                         .setHeader('content-type', 'application/json')
-                        .send({message: `Medical history record updated`, medical_history: medical_history}); // body is JSON
+                        .send({message: `Medical history record updated!`, medical_history: medical_history}); // body is JSON
                 }).catch(error => {
                     if (error.name === 'SequelizeUniqueConstraintError') {
                         res.status(409)
