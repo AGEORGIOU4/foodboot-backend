@@ -23,7 +23,6 @@ const Client = db.define('Client', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
   },
   phone: {
     type: DataTypes.STRING,
