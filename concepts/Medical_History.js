@@ -6,7 +6,6 @@ const Medical_History = db.define('Medical_History', {
         primaryKey: true,
         type: DataTypes.INTEGER,
         require: true,
-        autoIncrement: true,
     },
     client_id: {
         type: DataTypes.INTEGER,
