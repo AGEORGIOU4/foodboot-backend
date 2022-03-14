@@ -36,7 +36,7 @@ router.get('/clients/:id', (req, res) => {
     if (isNaN(id)) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
-            .send({error: `ID is non-numeric`});
+            .send({error: `ID is non-numeric!`});
     }
 
     Client.findOne({where: {id: id}})
@@ -44,7 +44,7 @@ router.get('/clients/:id', (req, res) => {
             if (!client) {
                 return res.status(404)
                     .setHeader('content-type', 'application/json')
-                    .send({error: `Client not found for  id: ${id}`});
+                    .send({error: `Client not found for  id: ${id}!`});
             }
 
             // client found
@@ -67,7 +67,7 @@ router.post('/clients/create', (req, res) => {
         if (!posted_client.first_name || !posted_client.last_name || !posted_client.dob || !posted_client.email || !posted_client.phone || !posted_client.address || !posted_client.food_allergies) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Bad request - All fields must be completed`}); // bad request
+                .send({error: `Bad request - All fields must be completed!`}); // bad request
         }
 
         return Client.create({
@@ -82,7 +82,7 @@ router.post('/clients/create', (req, res) => {
             .then(client => {
                 return res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Client added`, client: client}); // body is JSON
+                    .send({message: `Client added!`, client: client}); // body is JSON
             })
             .catch(error => {
                 if (error.name === 'SequelizeUniqueConstraintError') {
@@ -107,7 +107,7 @@ router.put('/clients/update/:id', (req, res) => {
         if (isNaN(id)) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
-                .send({error: `ID is non-numeric`});
+                .send({error: `ID is non-numeric!`});
         }
 
         const client = await Client.findOne({where: {id: id}})
@@ -115,7 +115,7 @@ router.put('/clients/update/:id', (req, res) => {
         if (!client) { // client not found
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Client with id ${id} not found`});
+                .send({error: `Client with id ${id} not found!`});
         }
 
         // client found
@@ -144,7 +144,7 @@ router.put('/clients/update/:id', (req, res) => {
             .then(client => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Client updated`, client: client}); // body is JSON
+                    .send({message: `Client updated!`, client: client}); // body is JSON
             })
             .catch(error => {
                 if (error.name === 'SequelizeUniqueConstraintError') {
@@ -171,7 +171,7 @@ router.delete('/clients/delete/:id', (req, res) => {
         if (!client) {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Client not found for id ${id}`});
+                .send({error: `Client not found for id ${id}!`});
         }
 
         // client found
@@ -179,7 +179,7 @@ router.delete('/clients/delete/:id', (req, res) => {
             .then(client => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Client deleted`, client: client});
+                    .send({message: `Client deleted!`, client: client});
             })
     })
         .catch(error => {
@@ -212,7 +212,7 @@ router.get('/clients/medical-histories/:id', (req, res) => {
     if (isNaN(id)) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
-            .send({error: `ID is non-numeric`});
+            .send({error: `ID is non-numeric!`});
     }
 
     Medical_History.findAll({where: {client_id: id}, order: [['date', 'DESC']]})
@@ -220,7 +220,7 @@ router.get('/clients/medical-histories/:id', (req, res) => {
             if (!medical_history) {
                 return res.status(404)
                     .setHeader('content-type', 'application/json')
-                    .send({error: `Medical History not found for Client with id: ${id}`});
+                    .send({error: `Medical History not found for Client with id: ${id}!`});
             }
 
             // medical_history found
@@ -242,14 +242,14 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
     if (!posted_medical_history.client_id || !posted_medical_history.date || !posted_medical_history.height || !posted_medical_history.weight) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
-            .send({error: `Bad request - All fields must be completed`}); // bad request
+            .send({error: `Bad request - All fields must be completed!`}); // bad request
     }
 
     Client.findOne({where: {id: posted_medical_history.client_id}}).then(client => {
         if (!client) {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Invalid client for id: ${id}`});
+                .send({error: `Invalid client for id: ${id}!`});
         }
     })
 
@@ -264,7 +264,7 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
                 .then(medical_history => {
                     return res.status(200)
                         .setHeader('content-type', 'application/json')
-                        .send({message: `Medical History added`, medical_history: medical_history}); // body is JSON
+                        .send({message: `Medical History added!`, medical_history: medical_history}); // body is JSON
                 });
         } else {
             //  medical history found
@@ -273,10 +273,11 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
             medical_history.height = posted_medical_history.height;
             medical_history.weight = posted_medical_history.weight;
 
-            medical_history.save().then(medical_history => {
+            medical_history.save()
+                .then(medical_history => {
                 return res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Medical History updated`, medical_history: medical_history}); // body is JSON
+                    .send({message: `Medical History updated!`, medical_history: medical_history}); // body is JSON
             }).catch(error => {
                 if (error.name === 'SequelizeUniqueConstraintError') {
                     res.status(409)
@@ -303,7 +304,7 @@ router.delete('/clients/medical-histories/delete/:id', (req, res) => {
         if (!medical_history) {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Medical History not found for id: ${id}`});
+                .send({error: `Medical History not found for id: ${id}!`});
         }
 
         // medical_history found
@@ -311,7 +312,7 @@ router.delete('/clients/medical-histories/delete/:id', (req, res) => {
             .then(medical_history => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Medical history deleted`, medical_history: medical_history});
+                    .send({message: `Medical history deleted!`, medical_history: medical_history});
             })
     })
         .catch(error => {

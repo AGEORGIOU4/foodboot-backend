@@ -173,7 +173,7 @@ router.post('/calendars/calendar-events/create', (req, res) => {
             .then(calendar_event => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar Event added`, calendar_event: calendar_event}); // body is JSON
+                    .send({message: `Calendar Event added!`, calendar_event: calendar_event}); // body is JSON
             }).catch(error => {
             return res.status(500)
                 .setHeader('content-type', 'application/json')
@@ -192,7 +192,7 @@ router.delete('/calendars/calendar-events/delete/:id', (req, res) => {
         if (!calendar_event) {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Calendar Event not found for id: ${id}`});
+                .send({error: `Calendar Event not found for id: ${id}!`});
         }
 
         // calendar_event found
@@ -200,7 +200,7 @@ router.delete('/calendars/calendar-events/delete/:id', (req, res) => {
             .then(calendar_event => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar Event deleted`, calendar_event: calendar_event});
+                    .send({message: `Calendar Event deleted!`, calendar_event: calendar_event});
             })
     })
         .catch(error => {
