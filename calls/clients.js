@@ -45,7 +45,6 @@ router.get('/clients/:id', (req, res) => {
                 return res.status(404)
                     .setHeader('content-type', 'application/json')
                     .send({error: `Client not found for  id: ${id}!`});
-
             }
 
             // client found
@@ -117,7 +116,6 @@ router.put('/clients/update/:id', (req, res) => {
             return res.status(404)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Client with id ${id} not found!`});
-
         }
 
         // client found
@@ -288,11 +286,12 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
                 }
             })
         }
+
     }).catch(error => {
         return res.status(500)
             .setHeader('content-type', 'application/json')
             .send({error: `Server error: ${error.name}`});
-    }
+    });
 });
 
 router.delete('/clients/medical-histories/delete/:id', (req, res) => {
@@ -322,5 +321,6 @@ router.delete('/clients/medical-histories/delete/:id', (req, res) => {
                 .send({error: `Server error: ${error.name}`});
         });
 });
+
 
 module.exports = router;
