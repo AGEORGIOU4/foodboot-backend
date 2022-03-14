@@ -265,14 +265,7 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
                     return res.status(200)
                         .setHeader('content-type', 'application/json')
                         .send({message: `Medical History added`, medical_history: medical_history}); // body is JSON
-                }).catch(error => {
-                if (error.name === 'SequelizeUniqueConstraintError') {
-                    res.status(409)
-                        .setHeader('content-type', 'application/json')
-                        .send({error: `Medical event already recorded at that date!`}); // resource already exists
-
-                }
-            });
+                });
         } else {
             //  medical history found
             medical_history.client_id = posted_medical_history.client_id;

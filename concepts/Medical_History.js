@@ -16,7 +16,6 @@ const Medical_History = db.define('Medical_History', {
     date: {
         type: DataTypes.DATE,
         allowNull: true,
-        unique: true
     },
     height: {
         type: DataTypes.STRING,
@@ -27,7 +26,7 @@ const Medical_History = db.define('Medical_History', {
         allowNull: true
     },
 }, {
-    tableName: 'medical_history', // table name
+    tableName: 'medical_histories', // table name
     timestamps: false // skip custom timestamp columns
 });
 

@@ -1,6 +1,7 @@
 const express = require('express')
 
 const clients = require('./calls/clients.js');
+const calendars = require('./calls/calendars.js');
 
 const db = require('./db/configDB');
 
@@ -20,6 +21,7 @@ app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https:
 
 // Calls
 app.use('/', clients);
+app.use('/', calendars);
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)
