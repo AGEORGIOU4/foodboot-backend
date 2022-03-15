@@ -64,7 +64,7 @@ router.post('/clients/create', (req, res) => {
 
     return db.transaction(async (t) => {
         // invalid client posted
-        if (!posted_client.first_name || !posted_client.last_name || !posted_client.dob || !posted_client.email || !posted_client.phone || !posted_client.address || !posted_client.food_allergies) {
+        if (!posted_client.first_name || !posted_client.last_name || !posted_client.dob || !posted_client.gender || !posted_client.email || !posted_client.phone || !posted_client.address || !posted_client.food_allergies) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Bad request - All fields must be completed!`}); // bad request
@@ -74,6 +74,7 @@ router.post('/clients/create', (req, res) => {
             first_name: posted_client.first_name,
             last_name: posted_client.last_name,
             dob: posted_client.dob,
+            gender: posted_client.gender,
             email: posted_client.email,
             phone: posted_client.phone,
             address: posted_client.address,
@@ -127,6 +128,9 @@ router.put('/clients/update/:id', (req, res) => {
 
         if (posted_client.dob)
             client.dob = posted_client.dob;
+
+        if (posted_client.gender)
+            client.gender = posted_client.gender;
 
         if (posted_client.email)
             client.email = posted_client.email;
@@ -256,6 +260,7 @@ router.put('/clients/medical-histories/update/:id', (req, res) => {
     Medical_History.findOne({where: {id: id}}).then(medical_history => {
         if (!medical_history) { // medical_history not found (Create new)
             Medical_History.create({
+                id: posted_medical_history.id,
                 client_id: posted_medical_history.client_id,
                 date: posted_medical_history.date,
                 height: posted_medical_history.height,

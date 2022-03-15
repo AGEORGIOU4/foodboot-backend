@@ -20,6 +20,10 @@ const Client = db.define('Client', {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  gender: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
