@@ -1,6 +1,7 @@
 const express = require('express')
 
 const clients = require('./calls/clients.js');
+const medical_histories = require('./calls/medical_histories.js');
 const calendars = require('./calls/calendars.js');
 
 const db = require('./db/configDB');
@@ -21,6 +22,7 @@ app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https:
 
 // Calls
 app.use('/', clients);
+app.use('/', medical_histories);
 app.use('/', calendars);
 
 app.listen(PORT, () => {
