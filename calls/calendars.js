@@ -30,7 +30,7 @@ router.get('/calendars', (req, res) => {
 });
 
 router.get('/calendars/:user', (req, res) => {
-    const {user} = req.params; // extract 'id' from request
+    const {user} = req.params; // extract 'user' from request
 
     Calendar.findOne({where: {user_email: user}})
         .then(calendar => {

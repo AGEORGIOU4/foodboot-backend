@@ -65,8 +65,8 @@ router.post('/food-options/create', (req, res) => {
         });
 });
 
-router.delete('/food-option/delete/:id', (req, res) => {
-    const {id} = req.id; // get food option id from URI
+router.delete('/food-options/delete/:id', (req, res) => {
+    const {id} = req.params; // get food option id from URI
 
     return db.transaction(async (t) => {
 
@@ -92,6 +92,7 @@ router.delete('/food-option/delete/:id', (req, res) => {
                 .send({error: `Server error: ${error.name}`});
         });
 });
+
 
 module.exports = router;
 
