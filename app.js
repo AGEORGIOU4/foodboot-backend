@@ -2,7 +2,11 @@ const express = require('express')
 
 const clients = require('./calls/clients.js');
 const medical_histories = require('./calls/medical_histories.js');
+const food_preferences = require('./calls/food_preferences.js');
+const food_options = require('./calls/food_options.js');
 const calendars = require('./calls/calendars.js');
+const calendar_events = require('./calls/calendar_events.js');
+const meal_plans = require('./calls/meal_plans.js');
 
 const db = require('./db/configDB');
 
@@ -23,7 +27,11 @@ app.get("/", (req, res) => { res.send("Welcome to foodboot backend! Visit https:
 // Calls
 app.use('/', clients);
 app.use('/', medical_histories);
+app.use('/', food_preferences);
+app.use('/', food_options);
 app.use('/', calendars);
+app.use('/', calendar_events);
+app.use('/', meal_plans);
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)

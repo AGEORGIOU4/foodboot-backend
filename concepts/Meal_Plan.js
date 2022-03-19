@@ -13,6 +13,14 @@ const Meal_Plan = db.define('Meal_Plan', {
         require: true,
         unique: true
     },
+    client_first_name: {
+        type: DataTypes.STRING,
+        require: true,
+    },
+    client_last_name: {
+        type: DataTypes.STRING,
+        require: true,
+    },
     date: {
             type: DataTypes.DATE,
         require: true,

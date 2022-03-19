@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const db = require('../db/configDB');
-
-// const Calendar = require('../concepts/Calendar');
-// const Calendar_Event = require("../concepts/Calendar_Event");
-// const Client = require("../concepts/Client");
+const Meal_Plan = require("../concepts/Meal_Plan");
 
 // Add headers to allow API calls before the routes are defined
 router.use(function (req, res, next) {
@@ -15,14 +12,14 @@ router.use(function (req, res, next) {
     next();
 });
 
-/*-----------CALENDAR------------*/
+/*-----------MEAL PLAN------------*/
 
-router.get('/calendars', (req, res) => {
-    Calendar.findAll()
-        .then(calendars => {
+router.get('/meal-plans', (req, res) => {
+    Meal_Plan.findAll()
+        .then(meal_plans => {
             return res.status(200)
                 .setHeader('content-type', 'application/json')
-                .send(calendars); // body is JSON
+                .send(meal_plans); // body is JSON
         })
         .catch(error => {
             return res.status(500)
@@ -31,223 +28,111 @@ router.get('/calendars', (req, res) => {
         });
 });
 
-// Get Calendar by User
-router.get('/calendars/:user', (req, res) => {
-    const {user} = req.params; // extract 'id' from request
+router.get('/meal-plans/:id', async (req, res) => {
+    const {id} = req.params;
 
-    Calendar.findOne({where: {user_email: user}})
-        .then(calendar => {
-            if (!calendar) {
-                return res.status(404)
-                    .setHeader('content-type', 'application/json')
-                    .send({error: `Calendar not found for  user_email: ${user}!`});
-            }
+    const meal_plan = await Meal_Plan.findOne({where: {id: id}});
 
-            // calendar found
-            return res.status(200)
-                .setHeader('content-type', 'application/json')
-                .send(calendar); // body is JSON
-        })
-        .catch(error => {
-            res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
+    if (!meal_plan) {
+        return res.status(404)
+            .setHeader('content-type', 'application/json')
+            .send({error: `Meal Plan not found for  id: ${id}!`});
+    }
+
+    if (meal_plan) {
+        return res.status(200)
+            .setHeader('content-type', 'application/json')
+            .send(meal_plan); // body is JSON
+    }
+
+    return res.status(500)
+        .setHeader('content-type', 'application/json')
+        .send({error: `Server error: ${error.name}`});
 });
 
-router.post('/calendars/create', (req, res) => {
-    const posted_calendar = req.body; // submitted calendar
+router.put('/meal-plans/update', (req, res) => {
+    const posted_meal_plan = req.body; // submitted meal plan
 
     return db.transaction(async (t) => {
-        // invalid calendar posted
-        if (!posted_calendar.user_email) {
+        // invalid meal plan posted
+        if (!posted_meal_plan.client_id || !posted_meal_plan.client_first_name || !posted_meal_plan.client_last_name || !posted_meal_plan.date || !posted_meal_plan.age || !posted_meal_plan.weight || !posted_meal_plan.notes) {
             return res.status(422)
                 .setHeader('content-type', 'application/json')
-                .send({error: `Bad request - User email is not valid!`}); // bad request
+                .send({error: `Bad request - All fields are required!`}); // bad request
         }
 
-        return Calendar.create({
-            user_email: posted_calendar.user_email,
-        }, {transaction: t})
-            .then(calendar => {
-                return res.status(200)
-                    .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar created!`, calendar: calendar}); // body is JSON
-            })
-            .catch(error => {
-                if (error.name === 'SequelizeUniqueConstraintError') {
-                    return res.status(409)
+        const meal_plan = await Meal_Plan.findOne({where: {client_id: posted_meal_plan.client_id}})
+
+        if(! meal_plan) {
+
+            return Meal_Plan.create({
+                client_id: posted_meal_plan.client_id,
+                client_first_name: posted_meal_plan.client_first_name,
+                client_last_name: posted_meal_plan.client_last_name,
+                date: posted_meal_plan.date,
+                age: posted_meal_plan.age,
+                weight: posted_meal_plan.weight,
+                notes: posted_meal_plan.notes,
+            }, {transaction: t})
+                .then(meal_plan => {
+                    return res.status(200)
                         .setHeader('content-type', 'application/json')
-                        .send({error: `Calendar for this user already exists!`}); // resource already exists
-                }
-            });
-    })
-        .catch(error => {
-            return res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
-});
-
-router.delete('/calendars/delete', (req, res) => {
-    const {user_email} = req.body; // get calendar id from URI
-
-    return db.transaction(async (t) => {
-
-        const calendar = await Calendar.findOne({where: {user_email: user_email}})
-
-        if (!calendar) {
-            return res.status(404)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Calendar not found for user_email ${user_email}!`});
+                        .send({message: `Meal plan created!`, meal_plan: meal_plan}); // body is JSON
+                })
+                .catch(error => {
+                    if (error.name === 'SequelizeUniqueConstraintError') {
+                        return res.status(409)
+                            .setHeader('content-type', 'application/json')
+                            .send({error: `Meal plan for client already exists!`}); // resource already exists
+                    }
+                });
         }
 
-        // calendar found
-        return calendar.destroy({transaction: t})
-            .then(calendar => {
+        meal_plan.client_id = posted_meal_plan.client_id;
+        meal_plan.client_first_name = posted_meal_plan.client_first_name;
+        meal_plan.client_last_name = posted_meal_plan.client_last_name;
+        meal_plan.date = posted_meal_plan.date;
+        meal_plan.age = posted_meal_plan.age;
+        meal_plan.weight = posted_meal_plan.weight;
+        meal_plan.notes = posted_meal_plan.notes;
+
+        return meal_plan.save({transaction: t})
+            .then(meal_plan => {
                 res.status(200)
                     .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar deleted!`, calendar: calendar});
-            })
-    })
-        .catch(error => {
-            res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
-});
-
-/*-----------CALENDAR EVENT------------*/
-
-// Get All Calendar Events by Calendar Email (user-email)
-router.get('/calendars/calendar-events/:user', (req, res) => {
-    const {user} = req.params; // extract 'user_email' from request
-
-    Calendar_Event.findAll({where: {user_email: user}})
-        .then(calendar_event => {
-            if (!calendar_event) {
-                return res.status(200)
-                    .setHeader('content-type', 'application/json')
-                    .send(calendar_event); // body is JSON
-            }
-
-            // calendar_event found
-            return res.status(200)
-                .setHeader('content-type', 'application/json')
-                .send(calendar_event); // body is JSON
-        })
-        .catch(error => {
-            res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
-});
-
-router.post('/calendars/calendar-events/create', (req, res) => {
-    const posted_calendar_event = req.body; // submitted calendar_event
-
-    if (!posted_calendar_event) {
-        res.status(400)
-            .setHeader('content-type', 'application/json')
-            .send({
-                error: `Bad request - User email, event title and at least start, end or all day attribute must be completed!`
-            }); // bad request
-    } else {
-        if (!posted_calendar_event.start) {
-            posted_calendar_event.start = "";
-        }
-        if (!posted_calendar_event.end) {
-            posted_calendar_event.end = "";
-        }
-        if (!posted_calendar_event.allDay) {
-            posted_calendar_event.allDay = "";
-        }
-
-        Calendar_Event.create({
-            id: posted_calendar_event.id,
-            user_email: posted_calendar_event.user_email,
-            title: posted_calendar_event.title,
-            start: posted_calendar_event.start,
-            end: posted_calendar_event.end,
-            allDay: posted_calendar_event.allDay
-        })
-            .then(calendar_event => {
-                res.status(200)
-                    .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar Event added!`, calendar_event: calendar_event}); // body is JSON
-            }).catch(error => {
-            return res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
-    }
-});
-
-router.put('/calendars/calendar-events/update/:id', (req, res) => {
-    const {id} = req.params; // get id from URI
-    const posted_calendar_event = req.body; // submitted client
-
-    return db.transaction(async (t) => {
-
-        const calendar_event = await Calendar_Event.findOne({where: {id: id}})
-
-        if (!calendar_event) { // calendar_event not found
-            return res.status(404)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Calendar event with id ${id} not found!`});
-        }
-
-        // client found
-        if (posted_calendar_event.title)
-            calendar_event.title = posted_calendar_event.title;
-
-        if (posted_calendar_event.start)
-            calendar_event.start = posted_calendar_event.start;
-
-        if (posted_calendar_event.end)
-            calendar_event.end = posted_calendar_event.end;
-
-        if (posted_calendar_event.allDay)
-            calendar_event.allDay = posted_calendar_event.allDay;
-
-
-        return calendar_event.save({transaction: t})
-            .then(calendar_event => {
-                res.status(200)
-                    .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar event updated!`, calendar_event: calendar_event}); // body is JSON
-            })
-    })
-        .catch(error => {
-            res.status(500)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Server error: ${error.name}`});
-        });
-});
-
-router.delete('/calendars/calendar-events/delete/:id', (req, res) => {
-    const {id} = req.params; // get client id from URI
-
-    return db.transaction(async (t) => {
-
-        const calendar_event = await Calendar_Event.findOne({where: {id: id}})
-
-        if (!calendar_event) {
-            return res.status(404)
-                .setHeader('content-type', 'application/json')
-                .send({error: `Calendar Event not found for id: ${id}!`});
-        }
-
-        // calendar_event found
-        return calendar_event.destroy({transaction: t})
-            .then(calendar_event => {
-                res.status(200)
-                    .setHeader('content-type', 'application/json')
-                    .send({message: `Calendar Event deleted!`, calendar_event: calendar_event});
+                    .send({message: `Meal Plan updated`, meal_plan: meal_plan}); // body is JSON
             })
     })
         .catch(error => {
             return res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
+router.delete('/meal-plans/delete/:id', (req, res) => {
+    const {id} = req.params; // get meal plan id from URI
+
+    return db.transaction(async (t) => {
+
+        const meal_plan = await Meal_Plan.findOne({where: {id: id}})
+
+        if (!meal_plan) {
+            return res.status(404)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Meal plan not found for id ${id}!`});
+        }
+
+        // meal plan found
+        return meal_plan.destroy({transaction: t})
+            .then(meal_plan => {
+                res.status(200)
+                    .setHeader('content-type', 'application/json')
+                    .send({message: `Meal plan deleted!`, meal_plan: meal_plan});
+            })
+    })
+        .catch(error => {
+            res.status(500)
                 .setHeader('content-type', 'application/json')
                 .send({error: `Server error: ${error.name}`});
         });
