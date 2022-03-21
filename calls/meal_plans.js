@@ -31,7 +31,7 @@ router.get('/meal-plans', (req, res) => {
 router.get('/meal-plans/:id', async (req, res) => {
     const {id} = req.params;
 
-    const meal_plan = await Meal_Plan.findOne({where: {id: id}});
+    const meal_plan = await Meal_Plan.findOne({where: {client_id: id}});
 
     if (!meal_plan) {
         return res.status(404)
