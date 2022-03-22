@@ -29,6 +29,34 @@ router.get('/clients', (req, res) => {
         });
 });
 
+router.get('/clients/count', (req, res) => {
+    Client.findAndCountAll()
+        .then(clients => {
+            return res.status(200)
+                .setHeader('content-type', 'application/json')
+                .send(clients); // body is JSON
+        })
+        .catch(error => {
+            return res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
+router.get('/clients/order', (req, res) => {
+    Client.findAll({order: [['last_name', 'ASC']]})
+        .then(clients => {
+            return res.status(200)
+                .setHeader('content-type', 'application/json')
+                .send(clients); // body is JSON
+        })
+        .catch(error => {
+            return res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
 router.get('/clients/:id', (req, res) => {
     const {id} = req.params; // extract 'id' from request
 

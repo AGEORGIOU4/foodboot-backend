@@ -15,6 +15,22 @@ router.use(function (req, res, next) {
 
 /*-----------CALENDAR EVENT------------*/
 
+router.get('/calendars/calendar-events/count/:email', (req, res) => {
+    const {email} = req.params; // extract 'user_email' from request
+
+    Calendar_Event.findAndCountAll({where: {user_email: email}})
+        .then(calendar_events => {
+            return res.status(200)
+                .setHeader('content-type', 'application/json')
+                .send(calendar_events); // body is JSON
+        })
+        .catch(error => {
+            return res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
 router.get('/calendars/calendar-events/:user', (req, res) => {
     const {user} = req.params; // extract 'user_email' from request
 
