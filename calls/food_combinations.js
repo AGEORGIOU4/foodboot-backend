@@ -49,7 +49,7 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
     const {id} = req.params; // get id from URI
     const posted_food_combination = req.body; // submitted food_combination
 
-    if (!posted_food_combination.meal_plan_id || !posted_food_combination.title || !posted_food_combination.portion || !posted_food_combination.start ||!posted_food_combination.end) {
+    if (!id || !posted_food_combination.meal_plan_id || !posted_food_combination.title || !posted_food_combination.portion || !posted_food_combination.start ||!posted_food_combination.end || !posted_food_combination.typeOfMeal) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
             .send({error: `Bad request - All fields must be completed!`}); // bad request
@@ -66,12 +66,13 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
     Food_Combination.findOne({where: {id: id}}).then(food_combination => {
         if (!food_combination) { // food_combination not found (Create new)
             Food_Combination.create({
-                id: posted_food_combination.id,
+                id: id,
                 meal_plan_id: posted_food_combination.meal_plan_id,
                 title: posted_food_combination.title,
                 portion: posted_food_combination.portion,
                 start: posted_food_combination.start,
                 end: posted_food_combination.start,
+                typeOfMeal: posted_food_combination.typeOfMeal,
             })
                 .then(food_combination => {
                     return res.status(200)
@@ -85,6 +86,7 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
             food_combination.portion = posted_food_combination.portion;
             food_combination.start = posted_food_combination.start;
             food_combination.end = posted_food_combination.end;
+            food_combination.typeOfMeal = posted_food_combination.typeOfMeal;
 
             food_combination.save()
                 .then(food_combination => {

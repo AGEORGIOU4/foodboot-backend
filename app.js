@@ -7,6 +7,7 @@ const food_options = require('./calls/food_options.js');
 const calendars = require('./calls/calendars.js');
 const calendar_events = require('./calls/calendar_events.js');
 const meal_plans = require('./calls/meal_plans.js');
+const food_combinations = require('./calls/food_combinations.js');
 
 const db = require('./db/configDB');
 
@@ -32,6 +33,7 @@ app.use('/', food_options);
 app.use('/', calendars);
 app.use('/', calendar_events);
 app.use('/', meal_plans);
+app.use('/', food_combinations);
 
 app.listen(PORT, () => {
   console.log(`App listening at http://localhost:${PORT}`)

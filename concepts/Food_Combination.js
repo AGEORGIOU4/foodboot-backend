@@ -15,8 +15,7 @@ const Food_Combination = db.define('Food_Combination', {
     title: {
         type: DataTypes.STRING,
         require: true,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     portion: {
         type: DataTypes.STRING,
@@ -28,6 +27,10 @@ const Food_Combination = db.define('Food_Combination', {
         allowNull: true,
     },
     end: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    typeOfMeal: {
         type: DataTypes.STRING,
         allowNull: true
     },
