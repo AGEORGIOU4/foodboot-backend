@@ -38,7 +38,8 @@
   <ul>
     <li>CRUD operations for client</li>
     <li>Search engine for clients table</li>
-    <li>Import/Export clients in .csv format</li>
+    <li>Import/Export clients in .csv format</li>        <li>/edit-profile</li>
+
     <li>CRUD operations for Food Preferences of each client</li>
     <li>CRUD operations for Medical History Record of each client</li>
     <li>Print Client's Card</li>
