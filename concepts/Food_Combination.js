@@ -34,6 +34,10 @@ const Food_Combination = db.define('Food_Combination', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    day: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 }, {
     tableName: 'food_combinations', // table name
     timestamps: false // skip custom timestamp columns

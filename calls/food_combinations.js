@@ -45,11 +45,41 @@ router.get('/meal-plans/food-combinations/:id', (req, res) => {
         });
 });
 
+router.get('/meal-plans/food-combinations/:id/:day', (req, res) => {
+    const {id} = req.params; // extract 'id' from request
+    const {day} = req.params; // extract 'day' from request
+
+    if (isNaN(id)) {
+        return res.status(422)
+            .setHeader('content-type', 'application/json')
+            .send({error: `ID is non-numeric!`});
+    }
+
+    Food_Combination.findAll({where: {meal_plan_id: id, day: day}, order: [['start', 'ASC']]})
+        .then(food_combination => {
+            if (!food_combination) {
+                return res.status(404)
+                    .setHeader('content-type', 'application/json')
+                    .send({error: `Food Combination not found for Meal Plan with id: ${id} & Day ${day}!`});
+            }
+
+            // food_combination found
+            return res.status(200)
+                .setHeader('content-type', 'application/json')
+                .send(food_combination); // body is JSON
+        })
+        .catch(error => {
+            res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
 router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
     const {id} = req.params; // get id from URI
     const posted_food_combination = req.body; // submitted food_combination
 
-    if (!id || !posted_food_combination.meal_plan_id || !posted_food_combination.title || !posted_food_combination.portion || !posted_food_combination.start ||!posted_food_combination.end || !posted_food_combination.typeOfMeal) {
+    if (!id || !posted_food_combination.meal_plan_id || !posted_food_combination.title || !posted_food_combination.portion || !posted_food_combination.start ||!posted_food_combination.end || !posted_food_combination.typeOfMeal || !posted_food_combination.day) {
         return res.status(422)
             .setHeader('content-type', 'application/json')
             .send({error: `Bad request - All fields must be completed!`}); // bad request
@@ -73,6 +103,7 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
                 start: posted_food_combination.start,
                 end: posted_food_combination.end,
                 typeOfMeal: posted_food_combination.typeOfMeal,
+                day: posted_food_combination.day,
             })
                 .then(food_combination => {
                     return res.status(200)
@@ -87,6 +118,7 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
             food_combination.start = posted_food_combination.start;
             food_combination.end = posted_food_combination.end;
             food_combination.typeOfMeal = posted_food_combination.typeOfMeal;
+            food_combination.day = posted_food_combination.day;
 
             food_combination.save()
                 .then(food_combination => {
