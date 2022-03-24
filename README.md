@@ -10,7 +10,7 @@
 <li>npm init</li>
 <li>npm install express --save</li>
 <li>npm install sequelize --save</li>
-<li>node</li>
+<li>node .</li>
 
 
 <h4>Testing</h4>
