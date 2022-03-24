@@ -25,7 +25,7 @@ router.get('/meal-plans/food-combinations/:id', (req, res) => {
             .send({error: `ID is non-numeric!`});
     }
 
-    Food_Combination.findAll({where: {meal_plan_id: id}, order: [['start', 'DESC']]})
+    Food_Combination.findAll({where: {meal_plan_id: id}, order: [['start', 'ASC']]})
         .then(food_combination => {
             if (!food_combination) {
                 return res.status(404)
@@ -71,7 +71,7 @@ router.put('/meal-plans/food-combinations/update/:id', (req, res) => {
                 title: posted_food_combination.title,
                 portion: posted_food_combination.portion,
                 start: posted_food_combination.start,
-                end: posted_food_combination.start,
+                end: posted_food_combination.end,
                 typeOfMeal: posted_food_combination.typeOfMeal,
             })
                 .then(food_combination => {
