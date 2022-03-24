@@ -16,4 +16,4 @@
 <h4>Testing</h4>
 <p>The POSTMAN folder contains a script with all API calls tested</p>
 
-<em>More Info can be found on the main README file in the Documentation folder</em>
+<em>More Info can be found in the main README file in the Documentation folder</em>
