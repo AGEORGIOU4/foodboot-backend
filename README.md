@@ -3,7 +3,7 @@
 
 <h4>Backend in NodeJS</h4>
 
-<p>To run please the backend please execute the following commands</p>
+<p>To run the backend please execute the following commands</p>
 
 <br/>
 
