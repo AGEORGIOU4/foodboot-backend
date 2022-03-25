@@ -86,6 +86,29 @@ router.get('/clients/:id', (req, res) => {
         });
 });
 
+router.get('/client/:email', (req, res) => {
+    const {email} = req.params; // extract 'id' from request
+
+    Client.findOne({where: {email: email}})
+        .then(client => {
+            if (!client) {
+                return res.status(404)
+                    .setHeader('content-type', 'application/json')
+                    .send({error: `Client not found for  id: ${email}!`});
+            }
+
+            // client found
+            return res.status(200)
+                .setHeader('content-type', 'application/json')
+                .send(client); // body is JSON
+        })
+        .catch(error => {
+            res.status(500)
+                .setHeader('content-type', 'application/json')
+                .send({error: `Server error: ${error.name}`});
+        });
+});
+
 router.post('/clients/create', (req, res) => {
     const posted_client = req.body; // submitted client
 
