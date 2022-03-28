@@ -18,8 +18,6 @@
 
 <em>More Info can be found below</em>
 
-<br/>
-
 <h2>Computer Science Final Year Thesis Project</h2>
 <h6>UCLan Cyprus</h6>
 
